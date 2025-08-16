@@ -11,9 +11,9 @@ public class App {
 
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
+        gamePanel.startGame();
 
         window.pack();
-
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
