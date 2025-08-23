@@ -2,7 +2,6 @@ package de.gaussian.entity;
 
 import static de.gaussian.GamePanel.TILE_SIZE;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,6 +29,11 @@ public class Player extends Entity {
     }
 
     public void update() {
+        if (keyboardControls.upPressed || keyboardControls.downPressed || keyboardControls.leftPressed
+                || keyboardControls.rightPressed) {
+            spriteCounter++;
+        }
+
         if (keyboardControls.upPressed) {
             direction = EntityDirection.UP;
             y -= speed;
@@ -46,29 +50,43 @@ public class Player extends Entity {
             direction = EntityDirection.RIGHT;
             x += speed;
         }
+
+        if (spriteCounter > 10) {
+            if (spriteNum == 0) {
+                spriteNum = 1;
+            } else if (spriteNum == 1) {
+                spriteNum = 0;
+            }
+
+            spriteCounter = 0;
+        }
     }
 
     public void draw(Graphics2D panel) {
         BufferedImage image = null;
         switch (direction) {
-            case DOWN -> image = down1;
-            case LEFT -> image = left1;
-            case RIGHT -> image = right1;
-            case UP -> image = up1;
+            case DOWN -> image = down[spriteNum];
+            case LEFT -> image = left[spriteNum];
+            case RIGHT -> image = right[spriteNum];
+            case UP -> image = up[spriteNum];
         }
         panel.drawImage(image, x, y, TILE_SIZE, TILE_SIZE, null);
     }
 
     public void getImage() {
         try {
-            up1 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1.jpg"));
-            up2 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2.jpg"));
-            down1 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1.jpg"));
-            down2 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2.jpg"));
-            left1 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1.jpg"));
-            left2 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2.jpg"));
-            right1 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1.jpg"));
-            right2 = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2.jpg"));
+            up = new BufferedImage[] {
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1r.jpg")),
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2r.jpg")) };
+            down = new BufferedImage[] {
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1r.jpg")),
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2r.jpg")) };
+            left = new BufferedImage[] {
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1l.jpg")),
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2l.jpg")) };
+            right = new BufferedImage[] {
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon1r.jpg")),
+                    ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("sprites/dragon2r.jpg")) };
         } catch (IOException e) {
             e.printStackTrace();
         }
